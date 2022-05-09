@@ -296,6 +296,7 @@ function main() {
             capBox.style.display = "block";
             if (fiber) {
               player.captions.currentTrack = 0;
+              player.captions.currentTrackNode = track;
               player.captions.active = true;
               setTimeout(() => {
                 player.captions.toggled = true;
@@ -349,7 +350,9 @@ function main() {
       plyr.addEventListener("keydown", (e) => {
         const fiber = getReactFiber("div.MediaPlayer");
         const player = fiber.child.ref.current.plyr;
+        const capBox = document.querySelector("div.plyr__captions");
         let speed = 1;
+        let capSize = '';
         switch (e.key) {
           case "<":
             speed = (player.speed * 10 - 1) / 10;
@@ -366,6 +369,16 @@ function main() {
             break;
           case "l":
             player.forward(5);
+            break;
+          case "-":
+          case "_":
+            capSize = getComputedStyle(capBox).fontSize
+            capBox.style.fontSize = (parseInt(capSize) - 2) + 'px'
+            break;
+          case "=":
+          case "+":
+            capSize = getComputedStyle(capBox).fontSize
+            capBox.style.fontSize = (parseInt(capSize) + 2) + 'px'
             break;
         }
       });
