@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         ASU Canvas Helper
-// @version      1.1
-// @description  1. fix video player size issue; 2. fix caption missing; 3. turn on caption by default; 4. add a button for downloading both video and caption with proper filenames
+// @version      1.2
+// @description  An userscript to fix video player issues of ASU Canvas (the website to take ASU online courses)
 // @author       Nendo
-// @homepage     https://nendo.dev
+// @homepage     https://github.com/nendonerd/ASU-Canvas-Helper
 // @license MIT
 // @match https://asuce.instructure.com/courses/*
 // @match https://mediaplus.asu.edu/lti/*
@@ -139,6 +139,22 @@ function main() {
         height: '100%',
         top: 0
       })
+
+      unsafeWindow.addEventListener('keydown', (e) => {
+        const value = {key: e.key, keyCode: e.keyCode, which: e.which}
+        const nextBtn = document.querySelector('a[aria-label="Next Module Item"]')
+        const prevBtn = document.querySelector('a[aria-label="Previous Module Item"]')
+        switch (e.key) {
+          case "N":
+            nextBtn.click()
+            break;
+          case "P":
+            prevBtn.click()
+            break;
+          default:
+            iframe.contentWindow.postMessage({ name: 'passKeyEvent', value }, '*')
+        }
+      })
     })  
 
     // retrieve caption, and make a download button if both caption url and video url are available
@@ -215,7 +231,10 @@ function main() {
       if (e.data && e.data.name === 'srt') {
         const srt = e.data.value
         waitForKeyElements("video", function (elem) {
-          console.log('video detected')
+          // get plyr player instance (plyr -> the video playback control library used in this iframe)
+          const fiber = getReactFiber('div.MediaPlayer')
+          const player = fiber.child.ref.current.plyr
+
           // convert caption text to cues
           elem.querySelector('track').remove()
           const track = elem.addTextTrack('captions', 'Captions', '')
@@ -234,19 +253,77 @@ function main() {
             cap.innerHTML = track.cues[0].text
             capBox.appendChild(cap)
             
-            // show the caption by default, through changing the caption states of plyr (a video playback control library)
+            // show the caption by default, through changing the caption states of plyr 
             capBox.style.display = 'block'
-            const fiber = getReactFiber('div.MediaPlayer')
             if (fiber) {
-              console.log(fiber.child.ref.current.plyr.captions)
-              fiber.child.ref.current.plyr.captions.currentTrack = 0
-              fiber.child.ref.current.plyr.captions.active = true
-              setTimeout(() => { fiber.child.ref.current.plyr.captions.toggled = true }, 0)
+              player.captions.currentTrack = 0
+              player.captions.active = true
+              setTimeout(() => { player.captions.toggled = true }, 0)
             }
           }
         })
+      } else if (e.data && e.data.name === 'passKeyEvent') {
+        const {key, keyCode, which} = e.data.value
+        const plyr = document.querySelector('div.plyr')
+
+        // bypass repeated key detection
+        if ([77, 75, 67].includes(keyCode)) {
+          plyr.dispatchEvent(new KeyboardEvent('keydown', {keyCode: 90}))
+        }
+        plyr.dispatchEvent(new KeyboardEvent('keydown', {key, keyCode, which}))
+        
       }
     }
+
+    waitForKeyElements('div.plyr', plyr => {
+      const speedBox = document.createElement('div')
+      speedBox.classList.add('plyr__speedbox')
+      Object.assign(speedBox.style, {
+        visibility: 'hidden',
+        position: 'absolute',
+        left: 0,
+        background: 'var(--plyr-captions-background,rgba(0,0,0,.8))',
+        color: 'var(--plyr-captions-text-color,#fff)',
+        padding: '3.6px 6px',
+        borderRadius: '2px'
+      })
+      plyr.appendChild(speedBox)
+
+      let goingToHide
+      const showSpeedBox = (speed) => {
+        speedBox.innerHTML = 'x' + speed.toFixed(1).padEnd(3, '0')
+        speedBox.style.visibility = 'visible'
+        if (goingToHide) {
+          clearTimeout(goingToHide)
+        }
+        goingToHide = setTimeout(() => {speedBox.style.visibility = 'hidden'}, 1000)
+      }
+
+      plyr.addEventListener('keydown', (e) => {
+        const fiber = getReactFiber('div.MediaPlayer')
+        const player = fiber.child.ref.current.plyr
+        let speed = 1
+        switch (e.key) {
+          case "<":
+            speed = (player.speed*10 - 1)/10
+            player.speed = speed
+            showSpeedBox(speed)
+            break;
+          case ">":
+            speed = (player.speed*10 + 1)/10
+            player.speed = speed
+            showSpeedBox(speed)
+            break;
+          case "j":
+            player.rewind(5) 
+            break;
+          case "l":
+            player.forward(5)
+            break;
+        }
+      })
+    })
+    
   }
 }
 
