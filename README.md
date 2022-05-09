@@ -13,15 +13,22 @@ A helper to fix video player issues of [ASU Canvas](https://asuce.instructure.co
 6. Supported youtube style keyboard shortcuts
 
 ## Keyboard Shortcuts
-| Action         | Key         |
-| -------------- | ----------- |
-| Play/Pause     | k           |
-| Rewind 5s      | j           |
-| Forward 5s     | l           |
-| Decrease Speed | < (SHIFT+,) |
-| Increase Speed | > (SHIFT+.) |
-| Prev Video     | P (SHIFT+p) |
-| Next Video     | N (SHIFT+n) |
+| Action                | Key         |
+| --------------------- | ----------- |
+| Play/Pause            | k           |
+| Rewind 5s             | j           |
+| Forward 5s            | l           |
+| Decrease Speed        | < (SHIFT+,) |
+| Increase Speed        | > (SHIFT+.) |
+| Prev Video            | P (SHIFT+p) |
+| Next Video            | N (SHIFT+n) |
+| Fullscreen            | f           |
+| Toggle Mute           | m           |
+| Decrease Volumn       | ↓           |
+| Increase Volumn       | ↑           |
+| Toggle Caption        | c           |
+| Decrease Caption Size | - or _      |
+| Increase Caption Size | + or =      |
 
 ## Usage (TLDR)
 1. Install [Tampermonkey Plugin](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) for Chrome 
@@ -68,4 +75,22 @@ I use combinations of *VScode*(with nvim plugin), *Tampermonkey*, *Greasyfork*, 
 5. Find the tab's ID by running `chrome-cli info`
 6. Cd to the repo folder, run `ls *.js | entr zsh -c 'chrome-cli reload -t <tabId>'`
 7. Do your edit to helper.js with any IDE, the course tab will refresh on every save of the script, and test your work in the course tab.
+8. To debug player state, *opt+cmd+i* to open devtools, *shift+cmd+c* and click on the video player (to make iframe context available in devtools console), then paste below code to get the player instance
+```js
+function getReactFiber(selector) {
+    const dom = document.querySelector(selector)
+    const key = Object.keys(dom).find(key=>{
+        return key.startsWith("__reactFiber$") // react 17+
+            || key.startsWith("__reactInternalInstance$"); // react <17
+    });
+    return dom[key]
+}
+player = getReactFiber('div.MediaPlayer').child.ref.current.plyr
+```
 
+## To-Do List
+- [ ] Fix Toggle Caption shortcut (not properly working)
+- [ ] Draw an icon. e.g. A devil stabs a big hole on a canvas from behind.
+- [ ] Make a comparison video showing the difference before/after applying this userscript
+- [ ] Add an 'Install Script' button to this landing page, similar to the Greasyfork one
+- [ ] Github action to autoly publish the script to Greasyfork on git push
