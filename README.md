@@ -89,7 +89,9 @@ player = getReactFiber('div.MediaPlayer').child.ref.current.plyr
 ```
 
 ## To-Do List
+- [ ] Save Caption Size setting for next video
 - [ ] Fix Toggle Caption shortcut (not properly working)
+- [ ] Fix Volumn UP/DOWN shortcut (not properly working)
 - [ ] Draw an icon. e.g. A devil stabs a big hole on a canvas from behind.
 - [ ] Make a comparison video showing the difference before/after applying this userscript
 - [ ] Add an 'Install Script' button to this landing page, similar to the Greasyfork one
