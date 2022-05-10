@@ -2,7 +2,10 @@
 
 A helper to fix video player issues of [ASU Canvas](https://asuce.instructure.com/) (the website to take ASU online courses)
 
-[See discussions on r/ASU](https://www.reddit.com/r/ASU/comments/ukvuai/i_wrote_a_plugin_to_fix_the_damn_canvas/)
+# [Install](https://github.com/nendonerd/ASU-Canvas-Helper/raw/main/helper.user.js)
+
+[See discussions on r/ASU](https://www.reddit.com/r/ASU/comments/ukvuai/i_wrote_a_plugin_to_fix_the_damn_canvas/) <br>
+[Visit Github for more info](https://github.com/nendonerd/ASU-Canvas-Helper)
 
 ## Features
 1. Correct the video player size
@@ -32,14 +35,14 @@ A helper to fix video player issues of [ASU Canvas](https://asuce.instructure.co
 
 ## Usage (TLDR)
 1. Install [Tampermonkey Plugin](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) for Chrome 
-2. Go to [Greasyfork](https://greasyfork.org/en/scripts/444645-asu-canvas-helper) and install the script
+2. [Install this Script](https://github.com/nendonerd/ASU-Canvas-Helper/raw/main/helper.user.js)
 
 ## Usage (For Dummies)
 Assumed that you're using chrome and know what's ASU Canvas (the website u take your ASU online courses)
 
 1. Install Tampermonkey: **[Click this to open the link](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)**, then hit **"Add to Chrome"** -> **"Add Extension"**
 
-2. Install ASU Canvas Helper: **[Click this to open the link](https://greasyfork.org/en/scripts/444645-asu-canvas-helper)**, then hit **"Install this script"** -> **"Install"**
+2. Install ASU Canvas Helper: **[Click this to open the link](https://github.com/nendonerd/ASU-Canvas-Helper/raw/main/helper.user.js)**, then hit **"Install this script"** -> **"Install"**
 
 3. Go to your ASU course link and log in, for example [this course](https://asuce.instructure.com/courses/2567/pages/2-dot-3-leftmost-and-rightmost-derivations?module_item_id=126914), then a tab will popup warning **"A userscript wants to access a cross-origin resource."**, click **"Always allow domain"** button in the bottom-left corner. Then chrome will jump back to the course tab. 
 > The warning is due to the domain of the video is different than the domain of the web page, thus downloading the video would make a cross domain request. It's safe to allow it.)
