@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ASU Canvas Helper
-// @version      1.2
+// @version      1.3
 // @description  An userscript to fix video player issues of ASU Canvas (the website to take ASU online courses)
 // @author       Nendo
 // @homepage     https://github.com/nendonerd/ASU-Canvas-Helper
@@ -292,6 +292,12 @@ function main() {
             cap.innerHTML = track.cues[0].text;
             capBox.appendChild(cap);
 
+            // load capSize from localStorage and apply it
+            const capSize = localStorage.getItem("_capSize");
+            if (capSize) {
+              capBox.style.fontSize = capSize;
+            }
+
             // show the caption by default, through changing the caption states of plyr
             capBox.style.display = "block";
             if (fiber) {
@@ -352,7 +358,7 @@ function main() {
         const player = fiber.child.ref.current.plyr;
         const capBox = document.querySelector("div.plyr__captions");
         let speed = 1;
-        let capSize = '';
+        let capSize = "";
         switch (e.key) {
           case "<":
             speed = (player.speed * 10 - 1) / 10;
@@ -372,13 +378,17 @@ function main() {
             break;
           case "-":
           case "_":
-            capSize = getComputedStyle(capBox).fontSize
-            capBox.style.fontSize = (parseInt(capSize) - 2) + 'px'
+            capSize = getComputedStyle(capBox).fontSize;
+            capSize = parseInt(capSize) - 2 + "px";
+            capBox.style.fontSize = capSize;
+            localStorage.setItem("_capSize", capSize);
             break;
           case "=":
           case "+":
-            capSize = getComputedStyle(capBox).fontSize
-            capBox.style.fontSize = (parseInt(capSize) + 2) + 'px'
+            capSize = getComputedStyle(capBox).fontSize;
+            capSize = parseInt(capSize) + 2 + "px";
+            capBox.style.fontSize = capSize;
+            localStorage.setItem("_capSize", capSize);
             break;
         }
       });

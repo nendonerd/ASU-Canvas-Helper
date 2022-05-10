@@ -92,10 +92,24 @@ player = getReactFiber('div.MediaPlayer').child.ref.current.plyr
 ```
 
 ## To-Do List
-- [ ] Save Caption Size setting for next video
+- [x] Save Caption Size setting for next video
 - [ ] Fix Toggle Caption shortcut (not properly working)
 - [ ] Fix Volumn UP/DOWN shortcut (not properly working)
 - [ ] Draw an icon. e.g. A devil stabs a big hole on a canvas from behind.
 - [ ] Make a comparison video showing the difference before/after applying this userscript
-- [ ] Add an 'Install Script' button to this landing page, similar to the Greasyfork one
+- [x] Add an 'Install Script' button to this landing page, similar to the Greasyfork one
 - [ ] Github action to autoly publish the script to Greasyfork on git push
+
+## Changelog
+
+#### v1.3
+- Caption size settings will now be saved
+- Add an 'Install' button to the landing page
+
+#### v1.2
+- A proper landing page is created, you can find detailed install instructions there: Github Greasyfork
+- Keyboard shortcut support is added: Rewind/Forward; Decrease/Increase Speed; Prev/Next Video; Decrease/Increase Caption Size. Keybindings are identical to youtube. See the landing page for detail.
+- Key press events in Canvas page will now be forwarded to the video player (they're on different domains), which means you can use keyboard shortcuts immediately when Canvas page loaded, without having to click and focus the video player to activate keyboard shortcuts.
+
+#### v1.1
+- fix waitForKeyElements.js dependency issue
